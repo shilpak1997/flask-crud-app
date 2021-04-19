@@ -1,0 +1,314 @@
+{% include "header.html"%}
+<script src=" https://code.jquery.com/jquery-3.5.1.js ">
+</script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+<link href="{{url_for('static', filename = 'css/twitter-bootstrap.css')}}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col md-12">
+
+            <h2>Todos List <button type="button" class="btn btn-success  pull-right" data-toggle="modal" data-target="#myModal">Add todo</button></h2>
+
+            {%with messages = get_flashed_messages()%} {%if messages%} {% for message in messages %}
+
+            <div class="alert alert-success alert-dismissable" role="alert">
+
+                <button type="button" class="close" data-dismiss="alert" aria-label="close">
+
+         <span aria-hidden="true">&times;</span>
+
+     </button> {{message}}
+
+
+            </div>
+
+
+            {%endfor%} {%endif%} {%endwith%}
+
+
+            <table id="datatableid" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Assignedby</th>
+                        <th>Assigndate</th>
+                        <th>Duedate</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for row in todos %}
+                    <tr>
+                        <td>{{row.0}}</td>
+                        <td>{{row.1}}</td>
+                        <td>{{row.2}}</td>
+                        <td>{{row.3}}</td>
+                        <td>{{row.4}}</td>
+                        <td>{{row.5}}</td>
+                        <td>
+                            <a href="/update/{{row.0}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.0}}">Edit</a>
+                            <a href="/delete/{{ row.0 }}" class="btn btn-danger btn-xs" onclick="return confirm( 'Are You Sure For Delete? ')">Delete</a>
+
+                        </td>
+
+                    </tr>
+
+
+                    <div id="modaledit{{row.0}}" class="modal fade" role="dialog">
+
+
+                        <div class="modal-dialog">
+
+
+                            <div class="modal-content">
+
+
+                                <div class="modal-header">
+
+
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+
+                                    <h4 class="modal-title">Update Information</h4>
+
+
+                                </div>
+
+
+                                <div class="modal-body">
+
+
+                                    <form action="{{ url_for('update') }}" method="POST">
+
+
+                                        <div class="form-group">
+
+
+                                            <label>Title:</label>
+                                            <input type="hidden" name="id" value="{{row.0}}">
+
+                                            <input type="text" class="form-control" name="title" value="{{row.1}}">
+
+
+                                        </div>
+
+
+
+                                        <div class="form-group">
+
+
+                                            <label>Description:</label>
+
+                                            <input type="text" class="form-control" name="description" value="{{row.2}}">
+
+
+                                        </div>
+
+
+                                        <div class="form-group">
+
+
+                                            <label>Assignedby:</label>
+
+                                            <input type="text" class="form-control" name="assignedby" value="{{row.3}}">
+
+
+                                        </div>
+
+
+
+                                        <div class="form-group">
+
+
+                                            <label>Assigndate:</label>
+
+                                            <input type="text" class="form-control" name="assigndate" value="{{row.4}}">
+
+
+                                        </div>
+
+
+
+
+                                        <div class="form-group">
+
+
+                                            <label>Duedate:</label>
+
+                                            <input type="text" class="form-control" name="duedate" value="{{row.5}}">
+
+
+                                        </div>
+
+
+
+                                        <div class="form-group">
+
+
+                                            <button class="btn btn-primary" type="submit">Update</button>
+
+
+                                        </div>
+
+
+                                    </form>
+
+
+                                </div>
+
+
+                                <div class="modal-footer">
+
+
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+
+        </div>
+
+
+        <!-- Modal -->
+
+    </div>
+</div>
+<div id="myModal" class="modal fade" role="dialog">
+
+
+    <div class="modal-dialog">
+
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+
+                <h4 class="modal-title">Add todo</h4>
+
+
+            </div>
+
+
+            <div class="modal-body">
+
+
+                <form action="{{ url_for('insert') }}" method="POST">
+
+
+                    <div class="form-group">
+
+
+                        <label>Title:</label>
+                        <input type="text" class="form-control" name="title" required="1">
+
+
+                    </div>
+
+
+                    <div class="form-group">
+
+
+                        <label>Description:</label>
+                        <input type="text" class="form-control" name="description" required="1">
+
+
+                    </div>
+
+
+                    <div class="form-group">
+
+
+                        <label>Assignedby:</label>
+                        <input type="text" class="form-control" name="assignedby" required="1">
+
+
+                    </div>
+
+
+                    <div class="form-group">
+
+
+                        <label>Assigndate:</label>
+                        <input type="text" class="form-control" name="assigndate" required="1">
+
+
+                    </div>
+
+                    <div class="form-group">
+
+
+                        <label>Duedate:</label>
+                        <input type="text" class="form-control" name="duedate" required="1">
+
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+
+                        <button class="btn btn-primary" type="submit">Add todo</button>
+
+
+                    </div>
+
+
+                </form>
+
+
+            </div>
+
+
+
+
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        $('#datatableid').DataTable();
+    });
+</script>
